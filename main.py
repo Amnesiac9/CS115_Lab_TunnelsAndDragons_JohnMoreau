@@ -47,7 +47,7 @@ def printSlowly(text):
         
 # Define a function to roll a D20
 def rollD20(threshold, bonus) -> bool:
-    input(f"Press Enter to roll a D20. You must roll a {str(threshold)} or higher. ") # Example of inline variables using f strings
+    input(f"Press Enter to roll a D20. You must roll a {str(threshold)} or higher. ")
     roll = random.randint(1,20)
     printSlowly(f"You roll {str(roll)} + {str(bonus)} bonus from your equipment.")
     input("Press Enter to continue.")
@@ -57,13 +57,14 @@ def rollD20(threshold, bonus) -> bool:
         return False
 
 def rollEscape(diceSize) -> bool:
+    input(f"Press Enter to roll a D{str(diceSize)}. You must roll a 2 or higher. ") 
     if random.randint(1,diceSize) > 1:
         return True
     else:
         return False
 
 def rollLoot() -> bool:
-    lootRollThreshold = random.randint(3,8)
+    lootRollThreshold = random.randint(4,8)
     return rollD20(lootRollThreshold, getPlayerRollBonus("loot"))
      
 
@@ -79,7 +80,7 @@ def getPlayerRollBonus(type) -> int:
             playerRollBonus += 3
         if emeraldRingFound:
             playerRollBonus += 1
-    else:
+    else: # Loot
         if dragonScaleFound:
             playerRollBonus += 2
         if sapphireAmuletFound:
@@ -396,26 +397,36 @@ while not exit:
                 printSlowly ("You enter the tunnel. It is dark and quiet. You are safe for now...")
                 printSlowly("You look around the area for loot...")
                 if rollLoot():
-                    lootNumber = random.randint(1,4)
-                    if lootNumber == 1:
-                        printSlowly("You find a small pouch of 10 gold on the floor.")
-                        playerGoldCount += 10
-                    if lootNumber == 2: 
-                        printSlowly("You find a pouch of 25 gold on the floor. I wonder who left this here? ...")
-                        playerGoldCount += 25
-                    if lootNumber == 3:
-                        printSlowly("You find a large gold nugget on the floor. It's worth at least 50 gold! You put it in your pouch.")
-                        playerLoot.append("Gold Nugget")
-                        playerGoldCount += 50
-                    if lootNumber == 4:
-                        printSlowly("You see a glowing object in the distance. You walk towards it and find a small glowing crystal. It feels cold to the touch. You put it in your pouch.")
-                        playerLoot.append("Glowing Crystal")
-                        glowingCrystalFound = True
-                    if lootNumber == 5:
-                        printSlowly("You find a small wooden box on the floor partially burried beneath some rubble.")
-                        printSlowly("You open it and find a small silver ring with an emerald embeded in the center. You put it on your finger for good luck.")
-                        playerLoot.append("Silver Emerald Ring")
-                        emeraldRingFound = True
+                    while True:
+                        lootNumber = random.randint(1,5)
+                        if lootNumber == 1:
+                            printSlowly("You find a small pouch of 10 gold on the floor.")
+                            playerGoldCount += 10
+                            break
+                        if lootNumber == 2: 
+                            printSlowly("You find a pouch of 25 gold on the floor. I wonder who left this here? ...")
+                            playerGoldCount += 25
+                            break
+                        if lootNumber == 3:
+                            printSlowly("You find a large gold nugget on the floor. It's worth at least 50 gold! You put it in your pouch.")
+                            if playerLoot.count("Gold Nugget") == 0:
+                                playerLoot.append("Gold Nugget")
+                            else:
+                                playerLoot.append(f"Gold Nugget x{playerLoot.count("Gold Nugget") + 1}")
+                                playerLoot.remove("Gold Nugget")
+                            playerGoldCount += 50
+                            break
+                        if lootNumber == 4 and not glowingCrystalFound:
+                            printSlowly("You see a glowing object in the distance. You walk towards it and find a small glowing crystal. It feels cold to the touch. You put it in your pouch.")
+                            playerLoot.append("Glowing Crystal")
+                            glowingCrystalFound = True
+                            break
+                        if lootNumber == 5 and not emeraldRingFound:
+                            printSlowly("You find a small wooden box on the floor partially burried beneath some rubble.")
+                            printSlowly("You open it and find a small silver ring with an emerald embeded in the center. You put it on your finger for good luck.")
+                            playerLoot.append("Silver Emerald Ring")
+                            emeraldRingFound = True
+                            break
                 else:
                     printSlowly("You find nothing of value.")
             # Safe Tunnel
