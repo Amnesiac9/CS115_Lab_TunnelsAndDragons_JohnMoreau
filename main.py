@@ -63,7 +63,7 @@ def rollEscape() -> bool:
         return False
 
 def rollLoot() -> bool:
-    lootRollThreshold = random.randint(5,10)
+    lootRollThreshold = random.randint(3,8)
     return rollD20(lootRollThreshold, getPlayerRollBonus("loot"))
      
 
@@ -166,6 +166,7 @@ while not exit:
         playerLoot = []
         playerGoldCount = 0
         goblinSlayCount = 0
+        firstTurn = True
         
         
         # While the player has not found the exit
@@ -175,7 +176,7 @@ while not exit:
                 break
             
             
-            if playerTunnelCount == lastPlayerTunnelCount and playerTunnelCount > 0:
+            if playerTunnelCount == lastPlayerTunnelCount and not firstTurn:
                 printSlowly("The two tunnels look different from before...")
 
             dragonTunnel = random.randint(1,16)
@@ -194,6 +195,7 @@ while not exit:
                     continue
             
             # Check result of tunnel choice
+            firstTurn = False
             
             # Secret Tunnel
             if tunnelChoice == secretTunnel and secretTunnelFound == False:
@@ -397,7 +399,7 @@ while not exit:
         while True:
             try:
                 playAgain = input("Would you like to play again? (Enter anything to restart, or N to exit.) ")
-                if playAgain.lower() == "n":
+                if playAgain.strip().lower() == "n":
                     exit = True
                     break
                 else:
