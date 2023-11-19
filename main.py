@@ -71,6 +71,7 @@ def rollLoot() -> bool:
 
 # Main Game Loop
 while not exit:
+    gameOver = False
     # Main Menu
     print(r"                 ___====-_  _-====___")
     print(r"           _--^^^#####//      \\\\#####^^^--_")
@@ -103,31 +104,30 @@ while not exit:
         exit = True
         break
     
-    # New Game
-    # Player Variables
-    playerWeapons = False
-    secretTunnelFound = False
-    dragonDefeated = False
-    trollDefeated = False
-    goblinDefeated = False
-    dragonScaleFound = False
-    sapphireAmuletFound = False
-    boneToothFound = False
-    playerLootRollBonus = 0
-    playerCombatRollBonus = 0
-    playerTunnelCount = 0
-    playerLoot = []
-    playerGoldCount = 0
-    gameOver = False
-    
     # Start Game
+    printSlowly("You wake up on the cold stone floor of a cave.")
+    printSlowly("It's dark and quiet. The walls and floor around you are damp and covered in moss and slime.")
+    printSlowly("You sit up and feel around in the darkness for your torch and equipment.")
+    printSlowly("You find your torch and light it with a minor sparking spell. You are in a small room with two tunnels in front of you.")
     while not gameOver:
-        printSlowly("You wake up on the cold stone floor of a cave.")
-        printSlowly("It's dark and quiet. The walls and floor around you are damp and covered in moss and slime.")
-        printSlowly("You sit up and feel around in the darkness for your torch and equipment.")
-        printSlowly("You find your torch and light it with a minor sparking spell. You are in a small room with two tunnels in front of you.")
         printSlowly ("You appear to be lost in an underground cave. You must find your way out.")
         printSlowly("..............")
+        # New Game
+        # Player Variables
+        playerWeapons = False
+        secretTunnelFound = False
+        dragonDefeated = False
+        trollDefeated = False
+        goblinDefeated = False
+        dragonScaleFound = False
+        sapphireAmuletFound = False
+        boneToothFound = False
+        playerLootRollBonus = 0
+        playerCombatRollBonus = 0
+        playerTunnelCount = 0
+        playerLoot = []
+        playerGoldCount = 0
+        
         # While the player has not found the exit
         while playerTunnelCount < TunnelExit:
             
@@ -150,8 +150,6 @@ while not exit:
                 except:
                     tunnelChoice = 0
                 
-            
-            
             
             # Check result of tunnel choice
             
@@ -309,6 +307,18 @@ while not exit:
         printSlowly(f"You made it through {str(playerTunnelCount)} tunnels and found {playerGoldCount} gold.")
         if len(playerLoot) > 0:
             printSlowly(f"You found the following items: {str(playerLoot)}")
+        
+        while True:
+            try:
+                playAgain = input("Would you like to play again? (Y or N)")
+                if playAgain.lower() == "n":
+                    exit = True
+                    break
+                else:
+                    gameOver = False
+            except:
+                continue
             
-        input("Press Enter to return to the main menu.")
+        
+        
             
