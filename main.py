@@ -248,7 +248,7 @@ while not exit:
                 print("                              //.-~~~-~_--~- |-------~~~~~~~~")
                 #Roll a D20 to see if the player can defeat the dragon or escape
                 if not rollD20(dragonThreshold, getPlayerRollBonus("combat")):
-                    if not rollEscape():
+                    if not rollEscape(): # 1/3 chance to lose game, 2/3 chance to escape
                         printSlowly ("The dragon leaps out of the darkness and swallows you whole. The world starts to fade.")
                         gameOver = True
                         continue
