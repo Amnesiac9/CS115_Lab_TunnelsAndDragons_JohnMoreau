@@ -147,8 +147,8 @@ while not exit:
         dragonThreshold = random.randint(14,16)
         trollThreshold = random.randint(7,10)
         goblinThreshold = random.randint(3,6)
-        trappedChestThreshold = random.randint(3,7)
-        TunnelExit = random.randint(8,14)
+        trappedChestThreshold = random.randint(4,6)
+        TunnelExit = random.randint(8,12)
         # lootRollThreshold = 
         # Player Variables
         playerWeapons = False
