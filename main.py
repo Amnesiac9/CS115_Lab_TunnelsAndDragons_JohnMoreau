@@ -12,11 +12,7 @@ debug = False
 exit = False
 gameOver = False
 TunnelExit = 8
-dragonThreshold = 15
-trollThreshold = 10
-goblinThreshold = 7
-trappedChestThreshold = 6
-lootRollThreshold = 5
+
 
 # Define a function to print output slowly
 def printSlowly(text):
@@ -41,7 +37,7 @@ def rollD20(threshold, bonus) -> bool:
     roll = random.randint(1,20)
     printSlowly(f"You roll {str(roll)} + {str(bonus)}.")
     input("Press Enter to continue.")
-    if roll + bonus > threshold:
+    if roll + bonus >= threshold:
         return True
     else:
         return False
@@ -117,6 +113,11 @@ while not exit:
         printSlowly ("You appear to be lost in an underground cave. You must find your way out.")
         printSlowly("..............")
         # New Game
+        dragonThreshold = 15
+        trollThreshold = random.randint(5,9)
+        goblinThreshold = random.randint(3,5)
+        trappedChestThreshold = random.randint(1,6)
+        lootRollThreshold = 5
         # Player Variables
         playerWeapons = False
         secretTunnelFound = False
@@ -139,9 +140,9 @@ while not exit:
                 break
             
             
-            dragonTunnel = random.randint(1,15)
-            trollTunnel = random.randint(1,8)
-            goblinTunnel = random.randint(1,5)
+            dragonTunnel = random.randint(1,16)
+            trollTunnel = random.randint(1,9)
+            goblinTunnel = random.randint(1,6)
             lootTunnel = random.randint(1,5)
             secretTunnel = random.randint(1,4)
             
@@ -287,7 +288,7 @@ while not exit:
                         playerGoldCount += 10
                     if lootNumber == 2: 
                         printSlowly("You find a pouch of 25 gold on the floor. I wonder who left this here? ...")
-                        playerGoldCount += 15
+                        playerGoldCount += 25
                     if lootNumber == 3:
                         printSlowly("You find a large gold nugget on the floor. It's worth at least 50 gold! You put it in your pouch.")
                         playerLoot.append("Gold Nugget")
