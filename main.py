@@ -8,17 +8,21 @@ import time
 
 
 # Declare Global Variables
+debug = False
 exit = False
 gameOver = False
 TunnelExit = 8
 dragonThreshold = 15
-trollThreshold = 7
-goblinThreshold = 5
+trollThreshold = 10
+goblinThreshold = 7
 trappedChestThreshold = 6
 lootRollThreshold = 5
 
 # Define a function to print output slowly
 def printSlowly(text):
+    if debug:
+        print(text)
+        return
     lastChar = ""
     for char in text:
         print(char, end='')
@@ -204,6 +208,7 @@ while not exit:
                     printSlowly("The dragon lets out a loud roar and falls to the ground in a large plume of dust and smoke.")
                     printSlowly ("You defeat the dragon.")
                     dragonDefeated = True
+                    printSlowly("You look around the area for loot...")
                     if rollLoot():
                         printSlowly("You find the dragon's hoard of gold it was guarding... there's too much to carry, but you manage to stuff 200 gold pieces into your pockets.")
                         playerGoldCount += 200
@@ -230,6 +235,7 @@ while not exit:
                     printSlowly("The troll lets out a deep wail and falls to the ground with a thud.")
                     printSlowly ("You defeat the troll.")
                     trollDefeated = True
+                    printSlowly("You look around the area for loot...")
                     if rollLoot():
                         printSlowly("You find a small pouch of 15 gold on the troll's body.")
                         playerGoldCount += 15
@@ -256,6 +262,7 @@ while not exit:
                     printSlowly("The goblin falls to the ground and it's head rolls away.")
                     printSlowly ("You defeat the goblin.")
                     goblinDefeated = True
+                    printSlowly("You look around the area for loot...")
                     if rollLoot():
                         printSlowly("You find a small pouch of 5 gold on the goblin's body.")
                         playerGoldCount += 5
@@ -272,6 +279,7 @@ while not exit:
             # Loot Tunnel
             elif tunnelChoice == lootTunnel:
                 printSlowly ("You enter the tunnel. It is dark and quiet. You are safe for now...")
+                printSlowly("You look around the area for loot...")
                 if rollLoot():
                     lootNumber = random.randint(1,3)
                     if lootNumber == 1:
@@ -307,6 +315,12 @@ while not exit:
         printSlowly(f"You made it through {str(playerTunnelCount)} tunnels and found {playerGoldCount} gold.")
         if len(playerLoot) > 0:
             printSlowly(f"You found the following items: {str(playerLoot)}")
+        if dragonDefeated:
+            printSlowly("You defeated the dragon. Surely you are a hero now!")
+        if trollDefeated:
+            printSlowly("You defeated the troll. You've saved countless lives!")
+        if goblinDefeated:
+            printSlowly("You defeated the goblin. You're a true warrior!")
         
         while True:
             try:
@@ -315,7 +329,11 @@ while not exit:
                     exit = True
                     break
                 else:
+                    printSlowly("Starting new game...")
+                    print("---------------------------------------------")
+                    print()
                     gameOver = False
+                    break
             except:
                 continue
             
