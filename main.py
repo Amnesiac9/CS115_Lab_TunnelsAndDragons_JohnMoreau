@@ -17,7 +17,7 @@ import time
 
 
 # Declare Global Variables
-debug = False
+debug = True
 exit = False
 gameOver = False
 textSpeed = "slow"
@@ -56,8 +56,8 @@ def rollD20(threshold, bonus) -> bool:
     else:
         return False
 
-def rollEscape() -> bool:
-    if random.randint(1,3) > 1:
+def rollEscape(diceSize) -> bool:
+    if random.randint(1,diceSize) > 1:
         return True
     else:
         return False
@@ -71,21 +71,21 @@ def getPlayerRollBonus(type) -> int:
     playerRollBonus = 0
     
     if type == "combat":
-        if playerWeapons:
+        if playerWeaponsFound:
             playerRollBonus += 6
         if dragonScaleFound:
             playerRollBonus += 3
-        if sapphireAmuletFound:
-            playerRollBonus += 1
         if boneToothFound:
-            playerRollBonus += 2
+            playerRollBonus += 3
+        if emeraldRingFound:
+            playerRollBonus += 1
     else:
         if dragonScaleFound:
             playerRollBonus += 2
         if sapphireAmuletFound:
-            playerRollBonus += 5
-        if boneToothFound:
-            playerRollBonus += 1
+            playerRollBonus += 4
+        if emeraldRingFound:
+            playerRollBonus += 2
 
     return playerRollBonus
 
@@ -151,7 +151,7 @@ while not exit:
         TunnelExit = random.randint(8,12)
         # lootRollThreshold = 
         # Player Variables
-        playerWeapons = False
+        playerWeaponsFound = False
         secretTunnelFound = False
         dragonDefeated = False
         trollDefeated = False
@@ -159,6 +159,8 @@ while not exit:
         dragonScaleFound = False
         sapphireAmuletFound = False
         boneToothFound = False
+        emeraldRingFound = False
+        glowingCrystalFound = False
         playerLootRollBonus = 0
         playerCombatRollBonus = 0
         lastPlayerTunnelCount = 0
@@ -174,17 +176,28 @@ while not exit:
             
             if gameOver:
                 break
+
+            # Roll for tunnel contents
+            if playerTunnelCount == TunnelExit - 1:
+                dragonTunnel = random.randint(1,2)
+                trollTunnel = random.randint(1,2)
+                goblinTunnel = random.randint(1,2)
+                lootTunnel = random.randint(1,2)
+                # secretTunnel = random.randint(1,4)
+            else:
+                dragonTunnel = random.randint(1,32)
+                trollTunnel = random.randint(1,9)
+                goblinTunnel = random.randint(1,6)
+                lootTunnel = random.randint(1,4)
+                secretTunnel = random.randint(1,4)
             
             
+            # Check if the player went back a tunnel
             if playerTunnelCount == lastPlayerTunnelCount and not firstTurn:
                 printSlowly("The two tunnels look different from before...")
-
-            dragonTunnel = random.randint(1,16)
-            trollTunnel = random.randint(1,9)
-            goblinTunnel = random.randint(1,6)
-            lootTunnel = random.randint(1,5)
-            secretTunnel = random.randint(1,4)
             
+            # Update last tunnel count for next turn
+            lastPlayerTunnelCount = playerTunnelCount
             
             tunnelChoice = 0
             # Get tunnel choice
@@ -194,8 +207,11 @@ while not exit:
                 except:
                     continue
             
+            
+            firstTurn = False # Used to check if it's the first turn
+            safeTunnel = False # Used to check if the player is in a safe tunnel
+            
             # Check result of tunnel choice
-            firstTurn = False
             
             # Secret Tunnel
             if tunnelChoice == secretTunnel and secretTunnelFound == False:
@@ -210,7 +226,7 @@ while not exit:
                 if chestChoice == 1:
                     if rollD20(trappedChestThreshold, getPlayerRollBonus("loot")):
                         printSlowly("You open the chest. Inside is a thick layer of black soot and dust. You find a steel sword with a ruby embeded in the hilt, and metal shield with a fire emblem. You equip them and head back the way you came.")
-                        playerWeapons = True
+                        playerWeaponsFound = True
                         secretTunnelFound = True # To prevent the player from finding the chest again
                         playerLoot.append("Ruby Steel Sword")
                         playerLoot.append("Metal Fire Shield")
@@ -230,7 +246,6 @@ while not exit:
                 
             # Dragon Tunnel
             elif tunnelChoice == dragonTunnel and dragonDefeated == False:
-                printSlowly ("You enter the tunnel. Suddenly you hear a low rumbling growl and see a pair of huge glowing eyes in the darkness. You've entered the tunnel with a dragon!")
                 print("                                             __----~~~~~~~~~~~------___")
                 print("                                  .  .   ~~//====......          __--~ ~~")
                 print("                  -.            \\_|//     |||\\\\  ~~~~~~::::... /~")
@@ -248,50 +263,79 @@ while not exit:
                 print("                                -_     ~\\      ~~---l__i__i__i--~~_/")
                 print("                                _-~-__   ~)  \\--______________--~~")
                 print("                              //.-~~~-~_--~- |-------~~~~~~~~")
-                #Roll a D20 to see if the player can defeat the dragon or escape
-                if not rollD20(dragonThreshold, getPlayerRollBonus("combat")):
-                    if not rollEscape(): # 1/3 chance to lose game, 2/3 chance to escape
+                printSlowly ("You enter the tunnel. Suddenly you hear a low rumbling growl and see a pair of huge glowing eyes in the darkness. You've entered the tunnel with a dragon!")
+                
+                #If the player has weapons, they can choose to attack the dragon
+                if playerWeaponsFound:
+                    attackChoice = 0
+                    while attackChoice > 2 or attackChoice < 1:
+                        try:
+                            attackChoice = int(input("Do you (1) Attack the dragon, or (2) Try to run away?: "))
+                        except:
+                            continue
+                    if attackChoice == 1:
+                        printSlowly("You raise your shield and sword to fight.")
+                        printSlowly("The dragon lets out a loud roar and unleashes a jet of fire at you. You raise your shield and deflect the flames. You charge at the dragon and stab it in the chest.")
+                        if rollD20(dragonThreshold, getPlayerRollBonus("combat")):
+                            printSlowly("The dragon lets out a thundering roar and falls to the ground in a large plume of dust and smoke.")
+                            printSlowly ("You defeat the dragon.")
+                            dragonDefeated = True
+                        else:    
+                            printSlowly("The dragon's scales are too thick and your sword bounces off, the dragon turns to face you.")
+                            if glowingCrystalFound:
+                                printSlowly("You think quickly, and remember the glowing crystal in your pouch.")
+                                printSlowly("The dragon lets out a loud roar and unleashes another jet of fire at you.")
+                                printSlowly("You raise the glowing crystal in your hand and the flames are absorbed into it. You feel the crystal grow hot in your hand.")
+                                printSlowly("You throw the crystal at the dragon just as it starts to burn your hand. The crystal explodes in a blinding flash of cold light.")
+                                printSlowly("The room goes silent. As the smoke and dust clears you see the dragon has been frozen solid. The large cavern room is chilled.")
+                                printSlowly("You walk over to the dragon and stab it in the chest with your sword. The dragon shatters into a million pieces of ice.")
+                                printSlowly ("You defeat the dragon.")
+                                dragonDefeated = True
+                            elif rollEscape(3): # 1/3 chance to lose game, 2/3 chance to escape
+                                printSlowly("The dragon lets out a loud roar and unleashes another jet of fire at you.")
+                                printSlowly("You narrowly roll out of the way and the flames hit the wall behind you. Your fighting spirit has left you. You run back the way you came.")
+                                printSlowly ("You narrowly escape the dragon.")
+                                playerTunnelCount -= 1 # Go back one tunnel
+                            else:
+                                printSlowly("The dragon lets out a deafening roar and unleashes another jet of fire at you.")
+                                printSlowly ("Your shield drops to the ground as the flames engulf you. The world starts to fade.")
+                                gameOver = True
+                                continue
+                        if dragonDefeated:
+                            printSlowly("You look around the area for loot...")
+                            goldRoll = random.randint(100,250)
+                            printSlowly(f"You find the dragon's hoard of gold it was guarding... there's too much to carry, but you manage to stuff {goldRoll} gold pieces into your pockets.")
+                            playerGoldCount += goldRoll
+                            printSlowly("You also find a small red shimmering pearlescent scale on the floor. You feel the heat as you pick it up, it warms your hands and fills you with a strong sense of fighting spirit. You put it in your side pouch.")
+                            dragonScaleFound = True
+                            playerLoot.append("Dragon Scale")
+                # If the player does not have weapons, they can try to run away
+                else:
+                    printSlowly("You attempt to run away...")
+                    if rollEscape(3):
+                        printSlowly("The dragon lets out a loud roar and unleashes a jet of fire at you. You roll out of the way and the flames hit the wall behind you. You run back the way you came.")
+                        printSlowly ("You escape the dragon.")
+                        playerTunnelCount -= 1 # Go back one tunnel
+                    else:
                         printSlowly ("The dragon leaps out of the darkness and swallows you whole. The world starts to fade.")
                         gameOver = True
                         continue
-                    else:
-                        printSlowly("The dragon lets out a loud roar and unleashes a jet of fire at you. You roll out of the way and the flames hit the wall behind you. You run back the way you came.")
-                        printSlowly ("You narrowly escape the dragon.")
-                        playerTunnelCount -= 1 # Go back one tunnel
-                elif playerWeapons:
-                    printSlowly("The dragon lets out a loud roar and unleashes a jet of fire at you. You raise your shield and deflect the flames. You charge at the dragon and stab it in the chest.")
-                    printSlowly("The dragon lets out a loud roar and falls to the ground in a large plume of dust and smoke.")
-                    printSlowly ("You defeat the dragon.")
-                    dragonDefeated = True
-                    printSlowly("You look around the area for loot...")
-                    if rollLoot():
-                        printSlowly("You find the dragon's hoard of gold it was guarding... there's too much to carry, but you manage to stuff 200 gold pieces into your pockets.")
-                        playerGoldCount += 200
-                        printSlowly("You also find a small red shimmering pearlescent scale on the floor. You feel the heat as you pick it up, it warms your hands and fills you with a strong sense of fighting spirit. You put it in your side pouch.")
-                        dragonScaleFound = True
-                        playerLoot.append("Dragon Scale")
-                    else:
-                        printSlowly("You find nothing of value.")
-                else:
-                    printSlowly("The dragon lets out a loud roar and unleashes a jet of fire at you. You roll out of the way and the flames hit the wall behind you. You run back the way you came.")
-                    printSlowly ("You escape the dragon.")
-                    playerTunnelCount -= 1 # Go back one tunnel
-            
+                    
             # Troll Tunnel   
             elif tunnelChoice == trollTunnel and trollDefeated == False:
                 printSlowly ("You enter the tunnel. Suddenly you hear a low rumbling slow growl. A large creature towers over you. You've entered the tunnel with a troll!")
                 #Roll a D20 to see if the player can defeat the troll or escape
                 if not rollD20(trollThreshold, getPlayerRollBonus("combat")):
-                    if not rollEscape():
+                    if not rollEscape(4):
                         printSlowly ("The troll leaps out of the darkness and smashes you with a wooden club. The world starts to fade.")
                         gameOver = True
                         continue
                     else:
                         printSlowly("The troll lets out a loud roar and charges at you. You roll out of the way and the troll hits the wall behind you, dazed. You run back the way you came.")
-                        printSlowly ("You escape the troll.")
+                        printSlowly ("You narrowly escape the troll.")
                         playerTunnelCount -= 1 # Go back one tunnel
-                elif playerWeapons:
-                    printSlowly("The troll lets out a loud roar and charges at you. You raise your shield and sword to fight. You roll to dodge the trolls attack and stab it in the ribs.")
+                elif playerWeaponsFound:
+                    printSlowly("The troll lets out a loud roar and charges at you. You raise your shield and sword to fight. You roll to dodge the trolls attack and stab it squarely in the ribs.")
                     printSlowly("The troll lets out a deep wail and falls to the ground with a thud.")
                     printSlowly ("You defeat the troll.")
                     trollDefeated = True
@@ -315,15 +359,15 @@ while not exit:
                 printSlowly ("You enter the tunnel. Suddenly you hear a loud growl and see a pair of glowing eyes in the darkness. You've entered the tunnel with a goblin!")
                 #Roll a D20 to see if the player can defeat the goblin or escape
                 if not rollD20(goblinThreshold, getPlayerRollBonus("combat")):
-                    if not rollEscape():
+                    if not rollEscape(6):
                         printSlowly ("The goblin leaps out of the darkness and stabs you with a rusty dagger. The world starts to fade.")
                         gameOver = True
                         continue
                     else:
                         printSlowly("The goblin lets out a loud screetch and charges at you. You roll out of the way and the goblin stabs the empty air where you stood just moments before. You run back the way you came.")
                         printSlowly ("You narrowly escape the goblin.")
-                        playerTunnelCount -= 1
-                elif playerWeapons:
+                        playerTunnelCount -= 1 # Go back one tunnel
+                elif playerWeaponsFound:
                     printSlowly("The goblin lets out a loud roar and charges at you. You raise your shield and sword to fight. You roll to dodge the goblin's wild attack and swiftly cut off it's head.")
                     printSlowly("The goblin falls to the ground and it's head rolls away.")
                     printSlowly ("You defeat the goblin.")
@@ -335,7 +379,7 @@ while not exit:
                         printSlowly(f"You find a small pouch of {str(goldRoll)} gold on the goblin's body.")
                         playerGoldCount += goldRoll
                         if not boneToothFound:
-                            printSlowly("You also find a large bone tooth on a leather strap around the goblin's wrist. You remove the charm and place it on your arm for good luck. Maybe this will scare off other goblins?")
+                            printSlowly("You also find a large bone tooth on a leather strap around the goblin's wrist. You remove the charm and place it on your arm. You feel a surge of fighting spirit.")
                             boneToothFound = True
                             playerLoot.append("Bone Tooth")
                     else:
@@ -350,7 +394,7 @@ while not exit:
                 printSlowly ("You enter the tunnel. It is dark and quiet. You are safe for now...")
                 printSlowly("You look around the area for loot...")
                 if rollLoot():
-                    lootNumber = random.randint(1,3)
+                    lootNumber = random.randint(1,4)
                     if lootNumber == 1:
                         printSlowly("You find a small pouch of 10 gold on the floor.")
                         playerGoldCount += 10
@@ -361,17 +405,26 @@ while not exit:
                         printSlowly("You find a large gold nugget on the floor. It's worth at least 50 gold! You put it in your pouch.")
                         playerLoot.append("Gold Nugget")
                         playerGoldCount += 50
+                    if lootNumber == 4:
+                        printSlowly("You see a glowing object in the distance. You walk towards it and find a small glowing crystal. It feels cold to the touch. You put it in your pouch.")
+                        playerLoot.append("Glowing Crystal")
+                        glowingCrystalFound = True
+                    if lootNumber == 5:
+                        printSlowly("You find a small wooden box on the floor partially burried beneath some rubble.")
+                        printSlowly("You open it and find a small silver ring with an emerald embeded in the center. You put it on your finger for good luck.")
+                        playerLoot.append("Silver Emerald Ring")
+                        emeraldRingFound = True
                 else:
                     printSlowly("You find nothing of value.")
             # Safe Tunnel
             else:
+                safeTunnel = True
                 printSlowly ("You enter the tunnel. It is dark and quiet. You are safe for now...")
 
             
             #Continue on your way
-            input("Press Enter to continue on your way. ")
-            if playerTunnelCount >= 0:
-                lastPlayerTunnelCount = playerTunnelCount
+            if not safeTunnel:
+                input("Press Enter to continue on your way. ")
             playerTunnelCount += 1 # Increment tunnel count
             printSlowly("..............")
             
