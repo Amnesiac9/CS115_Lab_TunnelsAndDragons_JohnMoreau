@@ -71,9 +71,7 @@ def rollLoot() -> bool:
 
 # Main Game Loop
 while not exit:
-    
     # Main Menu
-    
     print(r"                 ___====-_  _-====___")
     print(r"           _--^^^#####//      \\\\#####^^^--_")
     print(r"        _-^##########// (    ) \\\\##########^-_")
@@ -214,6 +212,8 @@ while not exit:
                         printSlowly("You also find a small red shimmering pearlescent scale on the floor. You feel the heat as you pick it up, it warms your hands and fills you with a sense of fighting spirit. You put it in your side pouch.")
                         dragonScaleFound = True
                         playerLoot.append("Dragon Scale")
+                    else:
+                        printSlowly("You find nothing of value.")
                 else:
                     printSlowly("The dragon lets out a loud roar and unleashes a jet of fire at you. You roll out of the way and the flames hit the wall behind you. You run back the way you came.")
                     printSlowly ("You escape the dragon.")
@@ -238,6 +238,8 @@ while not exit:
                         printSlowly("You also find a small amulet made of petrified dark wood with Sapphires embeded around the edges. You put it around your neck for good luck.")
                         sapphireAmuletFound = True
                         playerLoot.append("Sapphire Amulet")
+                    else:
+                        printSlowly("You find nothing of value.")
                 else:
                     printSlowly("The troll lets out a loud roar and charges at you. You roll out of the way and the troll hits the wall behind you, dazed. You run back the way you came.")
                     printSlowly ("You escape the troll.")
@@ -262,6 +264,8 @@ while not exit:
                         printSlowly("You also find a large bone tooth on a leather strap around the goblin's wrist. You remove the charm and place it on your arm for good luck.")
                         boneToothFound = True
                         playerLoot.append("Bone Tooth")
+                    else:
+                        printSlowly("You find nothing of value.")
                 else:
                     printSlowly("The goblin lets out a loud roar and charges at you. You roll out of the way and the goblin hits the wall behind you, dazed. You run back the way you came.")
                     printSlowly ("You escape the goblin.")
@@ -297,16 +301,14 @@ while not exit:
         if playerTunnelCount >= TunnelExit:
             printSlowly("You see a light in the distance. You run towards it and find yourself outside. You have escaped the cave!")
             printSlowly("Congratulations! You have won the game!")
-            printSlowly(f"You found {playerGoldCount} gold.")
-            if len(playerLoot) > 0:
-                print("You found the following items:", playerLoot)
             gameOver = True
-            continue
         else:
             printSlowly("You have died. Game Over.")
-            printSlowly(f"You made it through {str(playerTunnelCount)} tunnels and found {playerGoldCount} gold.")
-            if len(playerLoot) > 0:
-                print("You found the following items:", playerLoot)
             gameOver = True
-            continue
+        
+        printSlowly(f"You made it through {str(playerTunnelCount)} tunnels and found {playerGoldCount} gold.")
+        if len(playerLoot) > 0:
+            printSlowly(f"You found the following items: {str(playerLoot)}")
+            
+        input("Press Enter to return to the main menu.")
             
