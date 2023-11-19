@@ -178,18 +178,20 @@ while not exit:
                 break
 
             # Roll for tunnel contents
-            if playerTunnelCount == TunnelExit - 1:
-                dragonTunnel = random.randint(1,2)
-                trollTunnel = random.randint(1,2)
-                goblinTunnel = random.randint(1,2)
-                lootTunnel = random.randint(1,2)
-                # secretTunnel = random.randint(1,4)
+            if playerTunnelCount == TunnelExit - 1 or playerTunnelCount == TunnelExit - 2:
+                dragonTunnel = random.randint(1,2) # 50% chance of dragon, dragon takes precedence over other enemies and loot
+                trollTunnel = random.randint(1,9) # Enemies take precedence over loot
+                goblinTunnel = random.randint(1,6) # Enemies take precedence over loot
+                lootTunnel = random.randint(1,2) # 50% chance of loot
             else:
                 dragonTunnel = random.randint(1,32)
                 trollTunnel = random.randint(1,9)
                 goblinTunnel = random.randint(1,6)
                 lootTunnel = random.randint(1,4)
-                secretTunnel = random.randint(1,4)
+                if secretTunnelFound:
+                    secretTunnel = 0 # Turn off secret tunnel
+                else:
+                    secretTunnel = random.randint(1,4)
             
             
             # Check if the player went back a tunnel
