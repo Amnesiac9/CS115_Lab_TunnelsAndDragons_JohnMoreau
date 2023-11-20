@@ -17,7 +17,7 @@ import time
 
 
 # Declare Global Variables
-debug = True
+debug = False
 exit = False
 gameOver = False
 textSpeed = "slow"
