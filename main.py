@@ -17,13 +17,13 @@ import time
 
 
 # Declare Global Variables
-debug = True
+debug = False
 exit = False
 gameOver = False
 textSpeed = "slow"
 
 
-# Define a function to print output slowly
+# Define a function to print output slowly and pause on the first period found for a moment.
 def printSlowly(text):
     if debug:
         print(text)
@@ -31,6 +31,11 @@ def printSlowly(text):
     lastChar = ""
     for char in text:
         print(char, end='')
+        print("\033[s\n\033[u", end='')
+        # Quickly skip over double spaces
+        if char == " " and lastChar == " ":
+            continue 
+        # Pause on periods
         if char == "." and lastChar != ".":
             time.sleep(0.3)
         else:
@@ -51,17 +56,12 @@ def rollD20(threshold, bonus) -> bool:
     roll = random.randint(1,20)
     printSlowly(f"You roll {str(roll)} + {str(bonus)} bonus from your equipment.")
     input("Press Enter to continue.")
-    if roll + bonus >= threshold:
-        return True
-    else:
-        return False
+    return roll + bonus >= threshold
+
 
 def rollEscape(diceSize) -> bool:
     input(f"Press Enter to roll a D{str(diceSize)}. You must roll a 2 or higher. ") 
-    if random.randint(1,diceSize) > 1:
-        return True
-    else:
-        return False
+    return random.randint(1,diceSize) > 1
 
 def rollLoot() -> bool:
     lootRollThreshold = random.randint(4,8)
@@ -113,11 +113,11 @@ while not exit:
     print(r"                   __\ | |  | | /__")
     print(r"                  (vvv(VVV)(VVV)vvv)")
     print(r"")
-    printSlowly("          Welcome to the Adventure Game!")
-    printSlowly("        CSS115 | 11-17-23 | by John Moreau")
-    print("                 1. Start Game")
-    print(f"                 2. Change Text Speed (Current: {textSpeed})")
-    print("                 3. Exit")
+    printSlowly("            Welcome to the Adventure Game!")
+    printSlowly("          CSS115 | 11-17-23 | by John Moreau")
+    print("                   1. Start Game")
+    print(f"                   2. Change Text Speed (Current: {textSpeed})")
+    print("                   3. Exit")
     menuChoice = 0
     while menuChoice > 3 or menuChoice < 1:
         try:
@@ -168,6 +168,7 @@ while not exit:
         playerTunnelCount = 0
         playerLoot = []
         playerGoldCount = 0
+        playerNuggetCount = 0
         goblinSlayCount = 0
         firstTurn = True
         
@@ -223,7 +224,7 @@ while not exit:
                 chestChoice = 0
                 while chestChoice > 2 or chestChoice < 1:
                     try:
-                        chestChoice = int(input("Do you open the chest? (1) Yes, (2) No "))
+                        chestChoice = int(input(printSlowly("Do you open the chest? (1) Yes, (2) No ")))
                     except:
                         continue
                 if chestChoice == 1:
@@ -397,27 +398,32 @@ while not exit:
                 printSlowly ("You enter the tunnel. It is dark and quiet. You are safe for now...")
                 printSlowly("You look around the area for loot...")
                 if rollLoot():
-                    while True:
+                    while True: # Loop in case the player has already found the crystal or ring before
                         lootNumber = random.randint(1,5)
                         if lootNumber == 1:
-                            printSlowly("You find a small pouch of 10 gold on the floor.")
-                            playerGoldCount += 10
+                            goldRoll = random.randint(5,15)
+                            printSlowly(f"You find a small pouch of {goldRoll} gold on the floor.")
+                            playerGoldCount += goldRoll
                             break
-                        if lootNumber == 2: 
-                            printSlowly("You find a pouch of 25 gold on the floor. I wonder who left this here? ...")
-                            playerGoldCount += 25
+                        if lootNumber == 2:
+                            goldRoll = random.randint(18, 35) 
+                            printSlowly(f"You find a pouch of {goldRoll} gold on the floor. I wonder who left this here? ...")
+                            playerGoldCount += goldRoll
                             break
                         if lootNumber == 3:
                             printSlowly("You find a large gold nugget on the floor. It's worth at least 50 gold! You put it in your pouch.")
-                            if playerLoot.count("Gold Nugget") == 0:
+                            if playerNuggetCount == 0:
+                                playerNuggetCount += 1
                                 playerLoot.append("Gold Nugget")
                             else:
-                                playerLoot.append(f"Gold Nugget x{playerLoot.count("Gold Nugget") + 1}")
+                                playerNuggetCount += 1
                                 playerLoot.remove("Gold Nugget")
+                                playerLoot.append(f"Gold Nugget x{playerNuggetCount}")
                             playerGoldCount += 50
                             break
                         if lootNumber == 4 and not glowingCrystalFound:
                             printSlowly("You see a glowing object in the distance. You walk towards it and find a small glowing crystal. It feels cold to the touch. You put it in your pouch.")
+                            printSlowly("Maybe this will come in handy later...")
                             playerLoot.append("Glowing Crystal")
                             glowingCrystalFound = True
                             break
@@ -437,7 +443,7 @@ while not exit:
             
             #Continue on your way
             if not safeTunnel:
-                input("Press Enter to continue on your way. ")
+                input(printSlowly("Press Enter to continue on your way."))
             playerTunnelCount += 1 # Increment tunnel count
             printSlowly("..............")
             
@@ -451,8 +457,8 @@ while not exit:
             if trollDefeated:
                 printSlowly("You defeated the troll. You've saved countless lives!")
             if goblinDefeated:
-                printSlowly(f"You defeated the {goblinSlayCount} goblin(s). You are a true warrior!")
-                gameOver = True
+                printSlowly(f"You defeated {goblinSlayCount} goblin(s). You are a true warrior!")
+            gameOver = True
         else:
             printSlowly("You have died. Game Over.")
             gameOver = True
@@ -464,7 +470,7 @@ while not exit:
         
         while True:
             try:
-                playAgain = input("Would you like to play again? (Enter anything to restart, or N to exit.) ")
+                playAgain = input(printSlowly("Would you like to play again? (Enter anything to restart, or N to exit.) "))
                 if playAgain.strip().lower() == "n":
                     exit = True
                     break
