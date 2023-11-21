@@ -74,7 +74,7 @@ def rollEscape(diceSize, threshold) -> bool:
     inputSlowly(f"Press Enter to roll a D{str(diceSize)}. You must roll a {threshold} or higher. ") 
     roll = random.randint(1,diceSize)
     printSlowly(f"You roll {str(roll)} + {str(bonus)} bonus from your equipment.")
-    return roll > threshold
+    return roll >= threshold
 
 def rollLoot() -> bool:
     lootRollThreshold = random.randint(2,8)
