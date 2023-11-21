@@ -18,7 +18,7 @@ import time
 
 
 # Declare Global Variables
-debug = True
+debug = False # Debug to skip text typing effect
 exit = False
 gameOver = False
 textSpeed = "slow"
