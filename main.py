@@ -405,45 +405,6 @@ while not exit:
                     printSlowly ("The troll leaps out of the darkness and smashes you with a wooden club. The world starts to fade.")
                     gameOver = True
                     continue
-                        
-                
-                
-                # # ORIGINAL
-                # #Roll a D20 to see if the player can defeat the troll or escape
-                # if not rollD20(trollThreshold, getPlayerRollBonus("combat")):
-                #     printSlowly("Your fighting spirit has left you...")
-                #     printSlowly("You attempt to run away...")
-                #     if not rollEscape(6, 2):
-                #         printSlowly ("The troll leaps out of the darkness and smashes you with a wooden club. The world starts to fade.")
-                #         gameOver = True
-                #         continue
-                #     else:
-                #         printSlowly("The troll lets out a loud roar and charges at you.", end=' ')
-                #         printSlowly("You roll out of the way and the troll hits the wall behind you, dazed. You run back the way you came.")
-                #         printSlowly("You narrowly escape the troll.")
-                #         playerTunnelCount -= 1 # Go back one tunnel
-                # elif playerWeaponsFound:
-                #     printSlowly("The troll lets out a loud roar and charges at you.", end=' ')
-                #     printSlowly("You raise your shield and sword to fight. You roll to dodge the trolls attack and stab it squarely in the ribs.")
-                #     printSlowly("The troll lets out a deep wail and falls to the ground with a thud.")
-                #     printSlowly ("You defeat the troll.")
-                #     trollDefeated = True
-                #     printSlowly("You look around the area for loot...")
-                #     if rollLoot():
-                #         gold = random.randint(5,25)
-                #         printSlowly(f"You find a small pouch of {gold} gold on the troll's body.")
-                #         playerGoldCount += gold
-                #         printSlowly("You also find a small amulet made of petrified dark wood with Sapphires embeded around the edges. You put it around your neck for good luck.")
-                #         sapphireAmuletFound = True
-                #         playerLoot.append("Sapphire Amulet")
-                #     else:
-                #         printSlowly("You find nothing of value.")
-                # else:
-                #     printSlowly("You attempt to run away...")
-                #     printSlowly("The troll lets out a loud roar and charges at you.", end=' ')
-                #     printSlowly("You roll out of the way and the troll hits the wall behind you, dazed. You run back the way you came.")
-                #     printSlowly ("You escape the troll.")
-                #     playerTunnelCount -= 1 # Go back one tunnel
                 
             # Goblin Tunnel
             elif tunnelChoice == goblinTunnel:
@@ -478,41 +439,6 @@ while not exit:
                     printSlowly ("The goblin leaps out of the darkness and stabs you with a rusty dagger. The world starts to fade.")
                     gameOver = True
                     continue
-                    
-                #ORIGINAL  
-                #Roll a D20 to see if the player can defeat the goblin or escape
-                # if not rollD20(goblinThreshold, getPlayerRollBonus("combat")):
-                #     printSlowly("You have no weapons...") if not playerWeaponsFound else printSlowly("Your fighting spirit has left you...")
-                #     printSlowly("You attempt to run away...")
-                #     if not rollEscape(6, 1):
-                #         printSlowly ("The goblin leaps out of the darkness and stabs you with a rusty dagger. The world starts to fade.")
-                #         gameOver = True
-                #         continue
-                #     else:
-                #         printSlowly("The goblin lets out a loud screetch and charges at you. You roll out of the way and the goblin stabs the empty air where you stood just moments before. You run back the way you came.")
-                #         printSlowly ("You narrowly escape the goblin.")
-                #         playerTunnelCount -= 1 # Go back one tunnel
-                # elif playerWeaponsFound:
-                #     printSlowly("The goblin lets out a loud roar and charges at you. You raise your shield and sword to fight. You roll to dodge the goblin's wild attack and swiftly cut off it's head.")
-                #     printSlowly("The goblin falls to the ground and it's head rolls away.")
-                #     printSlowly ("You defeat the goblin.")
-                #     goblinDefeated = True
-                #     goblinSlayCount += 1
-                #     printSlowly("You look around the area for loot...")
-                #     if rollLoot():
-                #         gold = random.randint(5,15)
-                #         printSlowly(f"You find a small pouch of {str(gold)} gold on the goblin's body.")
-                #         playerGoldCount += gold
-                #         if not boneToothFound:
-                #             printSlowly("You also find a large bone tooth on a leather strap around the goblin's wrist. You remove the charm and place it on your arm. You feel a surge of fighting spirit.")
-                #             boneToothFound = True
-                #             playerLoot.append("Bone Tooth")
-                #     else:
-                #         printSlowly("You find nothing of value.")
-                # else:
-                #     printSlowly("The goblin lets out a loud screetch and charges at you. You roll out of the way and the goblin stabs the empty air where you stood just moments before. You run back the way you came.")
-                #     printSlowly ("You escape the goblin.")
-                #     playerTunnelCount -= 1 # Go back one tunnel
                             
             # Loot Tunnel
             elif tunnelChoice == lootTunnel:
