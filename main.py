@@ -350,12 +350,15 @@ while not exit:
                             printSlowly(f"You find the dragon's hoard of gold it was guarding... there's too much to carry, but you manage to stuff {gold} gold pieces into your pockets.")
                             playerGoldCount += gold
                             if dragonFrozen:
-                                printSlowly("You also find a small blue shimmering pearlescent scale on the floor. You feel the chill as you pick it up, it cools your hands and fills you with a strong sense of spirit. You put it in your side pouch.")
+                                printSlowly("You also find a small blue shimmering pearlescent scale on the floor.", end=' ')
+                                printSlowly("You feel the chill as you pick it up, it cools your hands and fills you with a strong sense of fighting spirit.")
+                                printSlowly("You put it in your side pouch.")
                                 playerLoot.append("Frozen Azure Dragon Scale")
                             else:
+                                printSlowly("You also find a large red shimmering pearlescent scale on the floor", end=' ')
+                                printSlowly("You feel the heat as you pick it up, it warms your hands and fills you with a strong sense of fighting spirit.")
+                                printSlowly("You put it in your side pouch.")
                                 playerLoot.append("Red Dragon Scale")
-                                printSlowly("You also find a large red shimmering pearlescent scale on the floor. You feel the heat as you pick it up, it warms your hands and fills you with a strong sense of fighting spirit. You put it in your side pouch.")
-                            
                             dragonScaleFound = True
                 # If the player does not have weapons, or they choose option 2, they can try to run away
                 else:
@@ -390,7 +393,8 @@ while not exit:
                         gold = random.randint(5,25)
                         printSlowly(f"You find a small pouch of {gold} gold on the troll's body.")
                         playerGoldCount += gold
-                        printSlowly("You also find a small amulet made of petrified dark wood with Sapphires embeded around the edges. You put it around your neck for good luck.")
+                        printSlowly("You also find a small amulet made of petrified dark wood with Sapphires embeded around the edges.")
+                        printSlowly("You put it around your neck for good luck.")
                         sapphireAmuletFound = True
                         playerLoot.append("Sapphire Amulet")
                     else:
@@ -425,14 +429,17 @@ while not exit:
                         printSlowly(f"You find a small pouch of {str(gold)} gold on the goblin's body.")
                         playerGoldCount += gold
                         if not boneToothFound:
-                            printSlowly("You also find a large bone tooth on a leather strap around the goblin's wrist. You remove the charm and place it on your arm. You feel a surge of fighting spirit.")
+                            printSlowly("You also find a large bone tooth on a leather strap around the goblin's wrist.")
+                            printSlowly("You remove the charm and place it on your arm. You feel a slight surge of fighting spirit.")
                             boneToothFound = True
                             playerLoot.append("Bone Tooth")
                     else:
                         printSlowly("You find nothing of value.")
                 # Use to be a D20 roll to escape, and another D6 if you lost the roll with weapons, now it's a D6
                 elif rollEscape(6, 2): # 1/6 chance to lose game, 5/6 chance to escape
-                    printSlowly("The goblin lets out a loud screetch and charges at you. You roll out of the way and the goblin stabs the empty air where you stood just moments before. You run back the way you came.")
+                    printSlowly("The goblin lets out a loud screetch and charges at you.", end=' ')
+                    printSlowly("You roll out of the way and the goblin stabs the empty air where you stood just moments before.")
+                    printSlowly("You run back the way you came.")
                     printSlowly ("You narrowly escape the goblin.")
                     playerTunnelCount -= 1 # Go back one tunnel
                 else:
@@ -469,8 +476,9 @@ while not exit:
                             playerGoldCount += 50
                             break
                         if lootNumber == 4 and not glowingCrystalFound:
-                            printSlowly("You see a glowing object in the distance. You walk towards it and find a small glowing crystal. It feels cold to the touch. You put it in your pouch.")
-                            printSlowly("Maybe this will come in handy later...")
+                            printSlowly("You see a glowing object in the distance. You walk towards it and find a small glowing crystal.", end=' ')
+                            printSlowly("It feels cold to the touch.")
+                            printSlowly("You put it in your pouch. Maybe this will come in handy later...")
                             playerLoot.append("Glowing Crystal")
                             glowingCrystalFound = True
                             break
