@@ -469,9 +469,13 @@ while not exit:
                             if playerNuggetCount == 0:
                                 playerNuggetCount += 1
                                 playerLoot.append("Gold Nugget")
-                            else:
+                            elif playerNuggetCount == 1:
                                 playerNuggetCount += 1
                                 playerLoot.remove("Gold Nugget")
+                                playerLoot.append(f"Gold Nugget x{playerNuggetCount}")
+                            else:
+                                playerLoot.remove("Gold Nugget x{playerNuggetCount}")
+                                playerNuggetCount += 1
                                 playerLoot.append(f"Gold Nugget x{playerNuggetCount}")
                             playerGoldCount += 50
                             break
